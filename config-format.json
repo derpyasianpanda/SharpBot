@@ -1,3 +1,4 @@
 {
-    "botToken": "<BOT TOKEN HERE>"
+    "botToken": "<BOT TOKEN HERE>",
+    "commandPrefix": "<COMMAND PREFIX HERE>"
 }
