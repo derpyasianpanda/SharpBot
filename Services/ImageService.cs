@@ -10,7 +10,7 @@ namespace SharpBot.Services
 
         public ImageService(HttpClient http) => _http = http;
 
-        public async Task<Stream> GetImage(string url) =>
-            await (await _http.GetAsync(url)).Content.ReadAsStreamAsync();
+        public async Task<Stream> GetUnprotectedImage(string url) =>
+            await (await _http.GetAsync("https://" + url)).Content.ReadAsStreamAsync();
     }
 }

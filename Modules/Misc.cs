@@ -1,14 +1,10 @@
-using System;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using Discord;
 using Discord.Commands;
 using SharpBot.Services;
 
 namespace SharpBot.Modules
 {
-    public class BasicModule : ModuleBase<SocketCommandContext>
+    public class Misc : ModuleBase<SocketCommandContext>
     {
         public ImageService ImageService { get; set; }
 
@@ -19,29 +15,29 @@ namespace SharpBot.Modules
                 Context.Client.CurrentUser.Username +
                 "written in Discord.Net");
 
-        [Command("purge")]
-        public async Task CleanAsync(int limit = 500) {
-            ITextChannel channel = (ITextChannel) Context.Channel;
-            IEnumerable<IMessage> messages = await channel
-                .GetMessagesAsync(Context.Message, Direction.Before, limit > 800 ? 800 : limit)
-                .FlattenAsync();
-
-            messages =
-                messages.Where(
-                    message => (DateTimeOffset.UtcNow - message.Timestamp).TotalDays <= 14);
-
-            await channel.DeleteMessagesAsync(messages);
-        }
-
         [Command("deepfake", RunMode = RunMode.Async)]
-        public async Task DeepFakeAsync()
+        public async Task Deepfake()
         {
             await ReplyAsync("Retrieving a completely generated face. The following image "+
             "is not real.");
 
             await Context.Channel.SendFileAsync(
-                await ImageService.GetImage("https://thispersondoesnotexist.com/image"),
+                await ImageService.GetUnprotectedImage("thispersondoesnotexist.com/image"),
                 "deepfake.jpg");
+        }
+
+        [Command("image", RunMode = RunMode.Async)]
+        [Summary("Retrieves a random image from lorem picsum")]
+        public async Task Image(int width = 500, int height = 0, params string[] effects)
+        {
+            string url = $"picsum.photos/{width}";
+            url += height > 0 ? "/" + height : "";
+            foreach (string effect in effects) url += $"?{effect}";
+
+            await ReplyAsync("Retreiving your random image 😊");
+            await Context.Channel.SendFileAsync(
+                await ImageService.GetUnprotectedImage(url), "image.jpg");
+            await Task.Delay(10);
         }
 
         // Why did I hardcode this lol
