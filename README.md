@@ -3,7 +3,7 @@
 Sadly, LavaLink seems to have problems with the voice chat websocket connection
 for me at the moment. I will be pausing development on this project but luckily,
 I was able to learn A LOT about C# techniques (fulfilling my original goal). I
-will be keeping an I on LavaLink for any updates but for now I will try moving
+will be keeping an eye on LavaLink for any updates but for now I will try moving
 on to learn more.
 
 
