@@ -1,14 +1,17 @@
+using System;
 using System.Threading.Tasks;
 using Discord.Commands;
 using SharpBot.Services;
 
 namespace SharpBot.Modules
 {
+    [Summary("Extra Commands")]
     public class Misc : ModuleBase<SocketCommandContext>
     {
         public ImageService ImageService { get; set; }
 
         [Command("info")]
+        [Summary("Info about this bot")]
         public async Task Info()
             => await ReplyAsync(
                 $"Hello, I am a bot called " +
@@ -16,6 +19,7 @@ namespace SharpBot.Modules
                 "written in Discord.Net");
 
         [Command("deepfake", RunMode = RunMode.Async)]
+        [Summary("Retrieves a randomly generated portrait from \"This Person Doesn't Exist\"")]
         public async Task Deepfake()
         {
             await ReplyAsync("Retrieving a completely generated face. The following image "+
@@ -28,11 +32,33 @@ namespace SharpBot.Modules
 
         [Command("image", RunMode = RunMode.Async)]
         [Summary("Retrieves a random image from lorem picsum")]
-        public async Task Image(int width = 500, int height = 0, params string[] effects)
+        public async Task Image(params string[] effects)
         {
-            string url = $"picsum.photos/{width}";
-            url += height > 0 ? "/" + height : "";
-            foreach (string effect in effects) url += $"?{effect}";
+            string url = $"picsum.photos/500/?{String.Join('&', effects)}";
+
+            await ReplyAsync("Retreiving your random image 😊");
+            await Context.Channel.SendFileAsync(
+                await ImageService.GetUnprotectedImage(url), "image.jpg");
+            await Task.Delay(10);
+        }
+
+        [Command("image", RunMode = RunMode.Async)]
+        [Summary("Retrieves a random image from lorem picsum")]
+        public async Task ImageSimple(int size, params string[] effects)
+        {
+            string url = $"picsum.photos/{size}/{size}/?{String.Join('&', effects)}";
+
+            await ReplyAsync("Retreiving your random image 😊");
+            await Context.Channel.SendFileAsync(
+                await ImageService.GetUnprotectedImage(url), "image.jpg");
+            await Task.Delay(10);
+        }
+
+        [Command("image", RunMode = RunMode.Async)]
+        [Summary("Retrieves a random image from lorem picsum")]
+        public async Task ImageAdvanced(int width, int height, params string[] effects)
+        {
+            string url = $"picsum.photos/{width}/{height}/?{String.Join('&', effects)}";
 
             await ReplyAsync("Retreiving your random image 😊");
             await Context.Channel.SendFileAsync(
@@ -43,6 +69,7 @@ namespace SharpBot.Modules
         // Why did I hardcode this lol
         // Also I'm sorry if this truly offends anyone.
         [Command("gay")]
+        [Summary("Don't do it")]
         public async Task Gay()
             => await ReplyAsync(
                 "Just to let you know, almost everyone (except for you " +

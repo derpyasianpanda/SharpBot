@@ -1,4 +1,5 @@
 {
     "botToken": "<BOT TOKEN HERE>",
-    "commandPrefix": "<COMMAND PREFIX HERE>"
+    "commandPrefix": "<COMMAND PREFIX HERE>",
+    "lavaLinkDirectory": "<PATH TO LAVALINK FOLDER HERE>"
 }

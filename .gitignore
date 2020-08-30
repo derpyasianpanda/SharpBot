@@ -4,3 +4,4 @@ config.json
 .references
 obj/
 bin/
+LavaLinkServer/logs/

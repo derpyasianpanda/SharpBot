@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Victoria;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -12,23 +13,25 @@ using SharpBot.Services;
 
 namespace SharpBot {
     class Program {
+        private ServiceProvider _services;
+
         static void Main (string[] args) =>
             new Program().MainAsync().GetAwaiter().GetResult();
 
         public async Task MainAsync () {
-            using (ServiceProvider services = ConfigureServices())
+            using (_services = ConfigureServices())
             {
-                DiscordSocketClient client = services.GetRequiredService<DiscordSocketClient>();
-                IConfiguration configuration = services.GetRequiredService<IConfiguration>();
+                DiscordSocketClient client = _services.GetRequiredService<DiscordSocketClient>();
+                IConfiguration configuration = _services.GetRequiredService<IConfiguration>();
 
                 // TODO: Learn more about logging services!
                 client.Log += Log;
-                services.GetRequiredService<CommandService>().Log += Log;
+                _services.GetRequiredService<CommandService>().Log += Log;
 
                 await client.LoginAsync(TokenType.Bot, configuration["botToken"]);
                 await client.StartAsync();
 
-                await services.GetRequiredService<CommandHandlingService>().InitializeAsync();
+                client.Ready += InitializeServices;
 
                 await Task.Delay(Timeout.Infinite);
             }
@@ -37,13 +40,21 @@ namespace SharpBot {
         private ServiceProvider ConfigureServices()
         {
             return new ServiceCollection()
-                .AddSingleton(CreateConfiguration())
+                .AddSingleton(BuildConfiguration())
                 .AddSingleton<DiscordSocketClient>()
                 .AddSingleton<CommandService>()
                 .AddSingleton<CommandHandlingService>()
                 .AddSingleton<HttpClient>()
                 .AddSingleton<ImageService>()
+                .AddLavaNode()
                 .BuildServiceProvider();
+        }
+
+        private async Task InitializeServices() {
+            await _services.GetRequiredService<CommandHandlingService>().InitializeAsync();
+            LavaNode lavaNode = _services.GetRequiredService<LavaNode>();
+            await lavaNode.ConnectAsync();
+            lavaNode.OnLog += Log;
         }
 
         private Task Log(LogMessage message) {
@@ -51,7 +62,7 @@ namespace SharpBot {
             return Task.CompletedTask;
         }
 
-        private IConfiguration CreateConfiguration()
+        private IConfiguration BuildConfiguration()
         {
             return new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())

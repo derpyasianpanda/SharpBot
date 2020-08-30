@@ -8,12 +8,30 @@ using SharpBot.Services;
 
 namespace SharpBot.Modules
 {
+    [Summary("Utility commands")]
     public class Utility : ModuleBase<SocketCommandContext>
     {
         public ImageService ImageService { get; set; }
         public CommandService CommandService { get; set; }
 
+        [Priority(1)]
         [Command("help module")]
+        [Summary("Lists modules")]
+        public async Task HelpModule()
+        {
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+
+            foreach (ModuleInfo module in CommandService.Modules)
+            {
+                embedBuilder.AddField(module.Name, module.Summary);
+            }
+
+            await ReplyAsync("Here's a list of modules: ", false, embedBuilder.Build());
+        }
+
+        [Priority(1)]
+        [Command("help module")]
+        [Summary("Lists commands in the given module")]
         public async Task HelpModule(string moduleName)
         {
             IEnumerable<ModuleInfo> modules = CommandService.Modules;
@@ -34,8 +52,13 @@ namespace SharpBot.Modules
         }
 
         [Command("help")]
-        public async Task Help(string commandName)
+        [Summary("Retrieves information about commands containing the query")]
+        public async Task Help(string commandName = "")
         {
+            if (commandName == "") {
+                await HelpModule();
+                return;
+            }
             IEnumerable<CommandInfo> commands = CommandService.Commands
                 .Where(command => command.Name.Contains(commandName));
             EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -53,7 +76,8 @@ namespace SharpBot.Modules
                     $"{commandSummary}\n{commandParameters}");
             }
 
-            await ReplyAsync($"Here's a list of {commandName} commands and their description: ",
+            await ReplyAsync(
+                $"Here's a list of commands with {commandName} and their description: ",
                 false, embedBuilder.Build());
         }
 
