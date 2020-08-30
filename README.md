@@ -10,13 +10,13 @@ on to learn more.
 Issue in more detail: It seems that either Cloudflare or Lavalink is doing something
 wrong that causes the websocket connection to hang in the middle of a "handshake."
 It seems to happen on random voice channels as I could get it working 20% of the
-time but after troubleshooting is seemed random to me. I hope it gets fixed
+time but after troubleshooting it seemed random to me. I hope it gets fixed
 someday
 
 
 A C# Discord Bot that does things. This is really just a way for me to learn
 more about C#'s/.NET's development environment and more advanced topics
-(NuGet/packages, Extensions, TAP Pattern, etc.)
+(NuGet/packages, Extensions, TAP Pattern, Dependency Injection, etc.)
 
 ## Current Plans
 
