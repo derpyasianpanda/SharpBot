@@ -53,7 +53,7 @@ namespace SharpBot {
         private async Task InitializeServices() {
             await _services.GetRequiredService<CommandHandlingService>().InitializeAsync();
             LavaNode lavaNode = _services.GetRequiredService<LavaNode>();
-            await lavaNode.ConnectAsync();
+            if (!lavaNode.IsConnected) await lavaNode.ConnectAsync();
             lavaNode.OnLog += Log;
         }
 
