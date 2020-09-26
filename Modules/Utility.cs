@@ -26,7 +26,8 @@ namespace SharpBot.Modules
                 embedBuilder.AddField(module.Name, module.Summary);
             }
 
-            await ReplyAsync("Here's a list of modules: ", false, embedBuilder.Build());
+            await ReplyAsync("Use \"$help module <module name>\" to get more help \n" +
+                "Here's a list of modules: ", false, embedBuilder.Build());
         }
 
         [Priority(1)]
