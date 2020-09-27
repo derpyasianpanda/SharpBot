@@ -45,7 +45,7 @@ namespace SharpBot.Modules
         }
 
         [Command("play")]
-        [Summary("Have Sharp Bot sing :D")]
+        [Summary("Have Sharp Bot sing :D (Supports YouTube, SoundCloud, Direct HTTP, and More)")]
         public async Task Play([Remainder] string query) {
             LavaPlayer player = LavaNode.GetPlayer(Context.Guild);
             SearchResponse results = await LavaNode.SearchYouTubeAsync(query);

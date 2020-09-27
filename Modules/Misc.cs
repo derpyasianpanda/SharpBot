@@ -16,7 +16,7 @@ namespace SharpBot.Modules
             => await ReplyAsync(
                 $"Hello, I am a bot called " +
                 Context.Client.CurrentUser.Username +
-                "written in Discord.Net");
+                " written in Discord.Net");
 
         [Command("deepfake", RunMode = RunMode.Async)]
         [Summary("Retrieves a randomly generated portrait from \"This Person Doesn't Exist\"")]
